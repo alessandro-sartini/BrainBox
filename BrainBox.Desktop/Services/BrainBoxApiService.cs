@@ -166,6 +166,22 @@ namespace BrainBox.Desktop.Services
 
 
 
+        /// <summary>
+        /// PUT /api/themes/{id} - Modifica un tema
+        /// </summary>
+        public async Task UpdateThemeAsync(int id, string newName)
+        {
+            try
+            {
+                var updateDto = new { Name = newName };
+                var response = await _httpClient.PutAsJsonAsync($"/api/themes/{id}", updateDto);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Errore durante la modifica del tema: {ex.Message}");
+            }
+        }
 
 
 

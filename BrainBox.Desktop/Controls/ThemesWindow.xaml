@@ -32,6 +32,7 @@
                 Margin="0,0,0,20">
             <ListBox Name="ThemesListBox"
                      FontSize="15"
+                      DisplayMemberPath="Name"
                      BorderThickness="0">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -87,6 +88,7 @@
         </Border>
 
         <Button Grid.Row="3"
+                Name="DeleteThemeButton"
                 Content="🗑️ Elimina Tema Selezionato"
                 Click="DeleteTheme_Click"
                 Height="42"
@@ -96,7 +98,8 @@
                 Background="#F44336"
                 BorderThickness="0"
                 Margin="0,0,0,15"
-                Cursor="Hand"/>
+                Cursor="Hand"
+                IsEnabled="False"/>
 
         <Button Grid.Row="4"
                 Content="← Torna alla Home"

@@ -17,8 +17,7 @@ namespace BrainBox.Desktop
         public IdeasWindow()
         {
             InitializeComponent();
-            _apiService = new BrainBoxApiService();
-
+            _apiService = (BrainBoxApiService)Application.Current.FindResource("ApiService"); 
             this.Loaded += IdeasWindow_Loaded;
         }
 
