@@ -18,11 +18,55 @@ namespace BrainBox.Controllers
         }
 
         // GET: api/ideas
+        // GET: api/ideas?createdFrom=2025-12-01&createdTo=2025-12-04&themeIds=1,3
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IdeaDto>>> GetIdeas()
+        public async Task<ActionResult<IEnumerable<IdeaDto>>> GetIdeas(
+            [FromQuery] DateTime? createdFrom = null,
+            [FromQuery] DateTime? createdTo = null,
+            [FromQuery] DateTime? modifiedFrom = null,
+            [FromQuery] DateTime? modifiedTo = null,
+            [FromQuery] string? themeIds = null)
         {
-            return Ok(await _context.Ideas
-                .AsNoTracking()
+            var query = _context.Ideas.AsNoTracking();
+
+            // Filtro data creazione
+            if (createdFrom.HasValue)
+            {
+                query = query.Where(i => i.CreatedAt >= createdFrom.Value);
+            }
+            if (createdTo.HasValue)
+            {
+                var endOfDay = createdTo.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(i => i.CreatedAt <= endOfDay);
+            }
+
+            // Filtro data ultima modifica
+            if (modifiedFrom.HasValue)
+            {
+                query = query.Where(i => i.LastModifiedAt >= modifiedFrom.Value);
+            }
+            if (modifiedTo.HasValue)
+            {
+                var endOfDay = modifiedTo.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(i => i.LastModifiedAt <= endOfDay);
+            }
+
+            // Filtro per temi
+            if (!string.IsNullOrWhiteSpace(themeIds))
+            {
+                var themeIdList = themeIds.Split(',')
+                    .Select(id => int.TryParse(id.Trim(), out var parsed) ? parsed : (int?)null)
+                    .Where(id => id.HasValue)
+                    .Select(id => id.Value)
+                    .ToList();
+
+                if (themeIdList.Count != 0)
+                {
+                    query = query.Where(i => i.IdeaThemes.Any(it => themeIdList.Contains(it.ThemeId)));
+                }
+            }
+
+            var ideas = await query
                 .Select(idea => new IdeaDto
                 {
                     Id = idea.Id,
@@ -36,8 +80,11 @@ namespace BrainBox.Controllers
                         Name = it.Theme.Name
                     }).ToList()
                 })
-                .ToListAsync());
+                .ToListAsync();
+
+            return Ok(ideas);
         }
+
 
         // GET: api/ideas/5
         [HttpGet("{id}")]
