@@ -1,4 +1,6 @@
-﻿namespace BrainBox.Models.DTOs
+﻿using BrainBox.Models.DTOs.ThemeDTOs;
+
+namespace BrainBox.Models.DTOs.IdeaDto
 {
     public class IdeaDto
     {

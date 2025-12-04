@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BrainBox.Models.DTOs
+namespace BrainBox.Models.DTOs.IdeaDto
 {
     public class UpdateIdeaDto
     {
@@ -10,5 +10,7 @@ namespace BrainBox.Models.DTOs
 
         [Required]
         public string Description { get; set; } = string.Empty;
+
+        public List<int> ThemeIds { get; set; } =[];
     }
 }

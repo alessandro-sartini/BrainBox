@@ -1,6 +1,7 @@
 ﻿using BrainBox.Data;
 using BrainBox.Models;
-using BrainBox.Models.DTOs;
+using BrainBox.Models.DTOs.IdeaDto;
+using BrainBox.Models.DTOs.ThemeDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -143,7 +144,7 @@ namespace BrainBox.Controllers
 
                 var invalidThemeIds = createDto.ThemeIds.Except(validThemeIds).ToList();
 
-                if (invalidThemeIds.Any())
+                if (invalidThemeIds.Count != 0)
                 {
                     _context.Ideas.Remove(idea);
                     await _context.SaveChangesAsync();
@@ -189,10 +190,13 @@ namespace BrainBox.Controllers
 
 
         // PUT: api/ideas/5
+        // PUT: api/ideas/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIdea(int id, UpdateIdeaDto updateDto)
         {
-            var idea = await _context.Ideas.FindAsync(id);
+            var idea = await _context.Ideas
+                .Include(i => i.IdeaThemes)
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (idea == null)
             {
@@ -203,10 +207,50 @@ namespace BrainBox.Controllers
             idea.Description = updateDto.Description;
             idea.LastModifiedAt = DateTime.Now;
 
-            await _context.SaveChangesAsync();
+            if (updateDto.ThemeIds != null)
+            {
+                var currentThemeIds = idea.IdeaThemes.Select(it => it.ThemeId).ToList();
+
+                var newThemeIds = updateDto.ThemeIds;
+
+                var themesToRemove = idea.IdeaThemes
+                    .Where(it => !newThemeIds.Contains(it.ThemeId))
+                    .ToList();
+
+                foreach (var themeToRemove in themesToRemove)
+                {
+                    idea.IdeaThemes.Remove(themeToRemove);
+                }
+
+                var themeIdsToAdd = newThemeIds
+                    .Except(currentThemeIds)
+                    .ToList();
+
+                //verifivo l'esistenza del temi da aggiungere
+                foreach (var themeId in themeIdsToAdd)
+                {
+                    idea.IdeaThemes.Add(new IdeaTheme
+                    {
+                        IdeaId = idea.Id,
+                        ThemeId = themeId
+                    });
+                }
+            }
+
+            // 4. Salviamo tutto (EF Core capisce sia l'update dei campi che le modifiche alle relazioni)
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Gestione errori DB (opzionale ma consigliata)
+                return StatusCode(500, new { message = "Errore durante il salvataggio", details = ex.Message });
+            }
 
             return NoContent();
         }
+
 
         // DELETE: api/ideas/5
         [HttpDelete("{id}")]
@@ -260,7 +304,7 @@ namespace BrainBox.Controllers
             });
 
             var idea = await _context.Ideas.FindAsync(ideaId);
-            idea.LastModifiedAt = DateTime.Now;
+            idea!.LastModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
 

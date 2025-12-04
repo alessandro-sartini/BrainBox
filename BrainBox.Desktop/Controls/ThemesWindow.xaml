@@ -1,0 +1,111 @@
+﻿<Window x:Class="BrainBox.Desktop.ThemesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gestione Temi - BrainBox" 
+        Height="550" 
+        Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" 
+                  Text="🏷️ Gestione Temi" 
+                  FontSize="26" 
+                  FontWeight="Bold"
+                  Foreground="#333333"
+                  Margin="0,0,0,20"/>
+
+        <Border Grid.Row="1"
+                Background="White"
+                BorderBrush="#DDDDDD"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15"
+                Margin="0,0,0,20">
+            <ListBox Name="ThemesListBox"
+                     FontSize="15"
+                     BorderThickness="0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Border>
+
+        <Border Grid.Row="2"
+                Background="White"
+                BorderBrush="#DDDDDD"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15"
+                Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="➕ Aggiungi Nuovo Tema" 
+                          FontWeight="SemiBold" 
+                          FontSize="14"
+                          Foreground="#555555"
+                          Margin="0,0,0,10"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Name="NewThemeTextBox" 
+                            Grid.Column="0"
+                            Height="38"
+                            Padding="10"
+                            FontSize="14"
+                            BorderBrush="#CCCCCC"
+                            BorderThickness="1"/>
+
+                    <Button Grid.Column="2"
+                            Content="Aggiungi"
+                            Click="CreateTheme_Click"
+                            Width="100"
+                            Height="38"
+                            Background="#2196F3"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Cursor="Hand"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Button Grid.Row="3"
+                Content="🗑️ Elimina Tema Selezionato"
+                Click="DeleteTheme_Click"
+                Height="42"
+                FontSize="13"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Background="#F44336"
+                BorderThickness="0"
+                Margin="0,0,0,15"
+                Cursor="Hand"/>
+
+        <Button Grid.Row="4"
+                Content="← Torna alla Home"
+                Click="BackToHome_Click"
+                Height="42"
+                FontSize="13"
+                Background="#9E9E9E"
+                Foreground="White"
+                BorderThickness="0"
+                Cursor="Hand"/>
+    </Grid>
+</Window>

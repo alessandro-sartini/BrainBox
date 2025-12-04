@@ -1,4 +1,4 @@
-﻿namespace BrainBox.Models.DTOs
+﻿namespace BrainBox.Models.DTOs.ThemeDTOs
 {
     public class ThemeDto
     {

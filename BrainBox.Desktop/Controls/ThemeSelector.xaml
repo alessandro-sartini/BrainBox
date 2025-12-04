@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="BrainBox.Desktop.Controls.ThemeSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Contenitore principale -->
+    <Border Background="White" 
+            BorderBrush="#DDDDDD" 
+            BorderThickness="1" 
+            CornerRadius="6"
+            Padding="15">
+
+        <StackPanel>
+
+            <!-- SEZIONE 1: Titolo -->
+            <TextBlock Text="🏷️ Temi Associati" 
+                      FontSize="14" 
+                      FontWeight="SemiBold"
+                      Foreground="#333333"
+                      Margin="0,0,0,10"/>
+
+            <!-- SEZIONE 2: Area chips (temi selezionati) -->
+            <Border Background="#F5F5F5"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="10"
+                    MinHeight="60"
+                    Margin="0,0,0,10">
+
+                <!-- Stack panel che conterrà i chips -->
+                <StackPanel Name="SelectedThemesPanel" 
+                           Orientation="Horizontal">
+                    <!-- I chips verranno aggiunti qui dal codice C# -->
+                </StackPanel>
+            </Border>
+
+            <!-- SEZIONE 3: Lista checkbox temi disponibili -->
+            <TextBlock Text="Temi disponibili:" 
+                      FontSize="12" 
+                      Foreground="#666666"
+                      Margin="0,0,0,6"/>
+
+            <!-- ListBox con checkbox -->
+            <ListBox Name="AvailableThemesListBox"
+                     Height="120"
+                     BorderBrush="#E0E0E0"
+                     BorderThickness="1">
+             
+            </ListBox>
+
+        </StackPanel>
+    </Border>
+</UserControl>

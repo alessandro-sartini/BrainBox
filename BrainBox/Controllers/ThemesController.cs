@@ -1,6 +1,6 @@
 ﻿using BrainBox.Data;
 using BrainBox.Models;
-using BrainBox.Models.DTOs;
+using BrainBox.Models.DTOs.ThemeDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

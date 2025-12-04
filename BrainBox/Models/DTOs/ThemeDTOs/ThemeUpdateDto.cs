@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BrainBox.Models.DTOs
+namespace BrainBox.Models.DTOs.ThemeDTOs
 {
     public class ThemeUpdateDto
     {
