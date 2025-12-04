@@ -45,7 +45,21 @@ namespace BrainBox.Controllers
         {
             var ideaDto = await _context.Ideas
                 .AsNoTracking()
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .Where(i => i.Id == id)
+                .Select(idea => new IdeaDto  
+                {
+                    Id = idea.Id,
+                    Title = idea.Title,
+                    Description = idea.Description,
+                    CreatedAt = idea.CreatedAt,
+                    LastModifiedAt = idea.LastModifiedAt,
+                    Themes = idea.IdeaThemes.Select(it => new ThemeDto
+                    {
+                        Id = it.Theme.Id,
+                        Name = it.Theme.Name
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
 
             if (ideaDto == null)
             {
@@ -54,6 +68,8 @@ namespace BrainBox.Controllers
 
             return Ok(ideaDto);
         }
+
+
 
         // POST: api/ideas
         [HttpPost]
@@ -161,5 +177,73 @@ namespace BrainBox.Controllers
 
             return NoContent();
         }
+
+
+         //"Extra"
+
+        // POST: api/ideas/5/themes/3
+        [HttpPost("{ideaId}/themes/{themeId}")]
+        public async Task<IActionResult> AddThemeToIdea(int ideaId, int themeId)
+        {
+            var ideaExists = await _context.Ideas.AnyAsync(i => i.Id == ideaId);
+            if (!ideaExists)
+            {
+                return NotFound(new { message = $"Idea con ID {ideaId} non trovata" });
+            }
+
+            var themeExists = await _context.Themes.AnyAsync(t => t.Id == themeId);
+            if (!themeExists)
+            {
+                return NotFound(new { message = $"Tema con ID {themeId} non trovato" });
+            }
+
+            var linkExists = await _context.IdeaThemes
+                .AnyAsync(it => it.IdeaId == ideaId && it.ThemeId == themeId);
+
+            if (linkExists)
+            {
+                return Conflict(new { message = "Il tema è già associato a questa idea" });
+            }
+
+            // Crea il collegamento
+            _context.IdeaThemes.Add(new IdeaTheme
+            {
+                IdeaId = ideaId,
+                ThemeId = themeId
+            });
+
+            var idea = await _context.Ideas.FindAsync(ideaId);
+            idea.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/ideas/5/themes/3
+        [HttpDelete("{ideaId}/themes/{themeId}")]
+        public async Task<IActionResult> RemoveThemeFromIdea(int ideaId, int themeId)
+        {
+            var ideaTheme = await _context.IdeaThemes
+                .FirstOrDefaultAsync(it => it.IdeaId == ideaId && it.ThemeId == themeId);
+
+            if (ideaTheme == null)
+            {
+                return NotFound(new { message = "Collegamento tema-idea non trovato" });
+            }
+
+            _context.IdeaThemes.Remove(ideaTheme);
+
+            var idea = await _context.Ideas.FindAsync(ideaId);
+            if (idea != null)
+            {
+                idea.LastModifiedAt = DateTime.Now;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }
