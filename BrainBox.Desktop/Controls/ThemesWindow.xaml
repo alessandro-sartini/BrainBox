@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Gestione Temi - BrainBox" 
-        Height="550" 
+        Height="650" 
         Width="600"
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5">
@@ -12,10 +12,18 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <!-- SEZIONE MODIFICA -->
             <RowDefinition Height="Auto"/>
+            <!-- SEZIONE AGGIUNGI -->
             <RowDefinition Height="Auto"/>
+            <!-- PULSANTE MODIFICA -->
+            <RowDefinition Height="Auto"/>
+            <!-- PULSANTE ELIMINA -->
+            <RowDefinition Height="Auto"/>
+            <!-- TORNA HOME -->
         </Grid.RowDefinitions>
 
+        <!-- TITOLO -->
         <TextBlock Grid.Row="0" 
                   Text="🏷️ Gestione Temi" 
                   FontSize="26" 
@@ -23,6 +31,7 @@
                   Foreground="#333333"
                   Margin="0,0,0,20"/>
 
+        <!-- LISTA TEMI -->
         <Border Grid.Row="1"
                 Background="White"
                 BorderBrush="#DDDDDD"
@@ -32,7 +41,7 @@
                 Margin="0,0,0,20">
             <ListBox Name="ThemesListBox"
                      FontSize="15"
-                      DisplayMemberPath="Name"
+                     DisplayMemberPath="Name"
                      BorderThickness="0">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -43,7 +52,91 @@
             </ListBox>
         </Border>
 
+        <!-- EZIONE MODIFICA  -->
         <Border Grid.Row="2"
+                Name="EditThemeSection"
+                Background="#FFF3E0"
+                BorderBrush="#FFB74D"
+                BorderThickness="2"
+                CornerRadius="8"
+                Padding="15"
+                Margin="0,0,0,15"
+                Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock Text="✏️ Modifica Tema Selezionato" 
+                          FontWeight="SemiBold" 
+                          FontSize="14"
+                          Foreground="#E65100"
+                          Margin="0,0,0,10"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Name="EditThemeTextBox" 
+                            Grid.Column="0"
+                            Height="38"
+                            Padding="10"
+                            FontSize="14"
+                            BorderBrush="#FFB74D"
+                            BorderThickness="2"
+                            VerticalContentAlignment="Center"/>
+
+                    <Button Grid.Column="2"
+                            Content="💾 Salva"
+                            Click="UpdateTheme_Click"
+                            Width="100"
+                            Height="38"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#4CAF50"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#45A049"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Grid.Column="4"
+                            Content="❌ Annulla"
+                            Click="CancelEditTheme_Click"
+                            Width="100"
+                            Height="38"
+                            Background="#9E9E9E"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontSize="13"
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#9E9E9E"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#757575"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- SEZIONE AGGIUNGI NUOVO -->
+        <Border Grid.Row="3"
                 Background="White"
                 BorderBrush="#DDDDDD"
                 BorderThickness="1"
@@ -70,7 +163,8 @@
                             Padding="10"
                             FontSize="14"
                             BorderBrush="#CCCCCC"
-                            BorderThickness="1"/>
+                            BorderThickness="1"
+                            VerticalContentAlignment="Center"/>
 
                     <Button Grid.Column="2"
                             Content="Aggiungi"
@@ -82,12 +176,54 @@
                             BorderThickness="0"
                             FontSize="13"
                             FontWeight="SemiBold"
-                            Cursor="Hand"/>
+                            Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#2196F3"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#1976D2"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <Button Grid.Row="3"
+        <!-- PULSANTE MODIFICA -->
+        <Button Grid.Row="4"
+                Name="EditThemeButton"
+                Content="✏️ Modifica Tema Selezionato"
+                Click="EditTheme_Click"
+                Height="42"
+                FontSize="13"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Background="#FF9800"
+                BorderThickness="0"
+                Margin="0,0,0,10"
+                Cursor="Hand"
+                IsEnabled="False">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#FF9800"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#F57C00"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="#CCCCCC"/>
+                            <Setter Property="Foreground" Value="#888888"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <!-- PULSANTE ELIMINA -->
+        <Button Grid.Row="5"
                 Name="DeleteThemeButton"
                 Content="🗑️ Elimina Tema Selezionato"
                 Click="DeleteTheme_Click"
@@ -99,9 +235,25 @@
                 BorderThickness="0"
                 Margin="0,0,0,15"
                 Cursor="Hand"
-                IsEnabled="False"/>
+                IsEnabled="False">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#F44336"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#D32F2F"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="#CCCCCC"/>
+                            <Setter Property="Foreground" Value="#888888"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
-        <Button Grid.Row="4"
+        <!-- TORNA HOME -->
+        <Button Grid.Row="6"
                 Content="← Torna alla Home"
                 Click="BackToHome_Click"
                 Height="42"
@@ -109,6 +261,17 @@
                 Background="#9E9E9E"
                 Foreground="White"
                 BorderThickness="0"
-                Cursor="Hand"/>
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#9E9E9E"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#757575"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>

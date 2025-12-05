@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using BrainBox.Desktop.Models;
+using BrainBox.Desktop.Model;
 
 namespace BrainBox.Desktop.Controls
 {

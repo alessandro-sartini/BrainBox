@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BrainBox.Desktop.Models
+﻿namespace BrainBox.Desktop.Model
 {
     public class IdeaDto
     {

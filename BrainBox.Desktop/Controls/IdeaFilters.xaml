@@ -1,0 +1,170 @@
+﻿<UserControl x:Class="BrainBox.Desktop.Controls.IdeaFilters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Border Background="#E3F2FD"
+            BorderBrush="#2196F3"
+            BorderThickness="2"
+            CornerRadius="8"
+            Padding="15">
+
+        <StackPanel>
+
+            
+            <TextBlock Text="🔍 Filtri di Ricerca" 
+                      FontSize="16" 
+                      FontWeight="Bold"
+                      Foreground="#1976D2"
+                      Margin="0,0,0,15"/>
+
+            <!-- Etichetta "Data Creazione" -->
+            <TextBlock Text="📅 Data Creazione" 
+                      FontWeight="SemiBold" 
+                      FontSize="13"
+                      Foreground="#555555"
+                      Margin="0,0,0,6"/>
+
+            <!-- Griglia Data Creazione -->
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                          Text="Dal:" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,8,0"
+                          FontSize="13"/>
+
+                <DatePicker Grid.Column="1"
+                           Name="CreatedFromDatePicker"
+                           Height="32"
+                           FontSize="13"
+                           BorderBrush="#BBDEFB"
+                           BorderThickness="1"/>
+
+                <TextBlock Grid.Column="3" 
+                          Text="Al:" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,8,0"
+                          FontSize="13"/>
+
+                <DatePicker Grid.Column="4"
+                           Name="CreatedToDatePicker"
+                           Height="32"
+                           FontSize="13"
+                           BorderBrush="#BBDEFB"
+                           BorderThickness="1"/>
+            </Grid>
+
+
+            <TextBlock Text="📅 Data Ultima Modifica" 
+                      FontWeight="SemiBold" 
+                      FontSize="13"
+                      Foreground="#555555"
+                      Margin="0,0,0,6"/>
+
+            <!-- Griglia Data Modifica -->
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                          Text="Dal:" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,8,0"
+                          FontSize="13"/>
+
+                <DatePicker Grid.Column="1"
+                           Name="ModifiedFromDatePicker"
+                           Height="32"
+                           FontSize="13"
+                           BorderBrush="#BBDEFB"
+                           BorderThickness="1"/>
+
+                <TextBlock Grid.Column="3" 
+                          Text="Al:" 
+                          VerticalAlignment="Center"
+                          Margin="0,0,8,0"
+                          FontSize="13"/>
+
+                <DatePicker Grid.Column="4"
+                           Name="ModifiedToDatePicker"
+                           Height="32"
+                           FontSize="13"
+                           BorderBrush="#BBDEFB"
+                           BorderThickness="1"/>
+            </Grid>
+
+            <!-- Etichetta "Filtra per Temi" -->
+            <TextBlock Text="🏷️ Filtra per Temi" 
+                      FontWeight="SemiBold" 
+                      FontSize="13"
+                      Foreground="#555555"
+                      Margin="0,0,0,6"/>
+
+            <!-- ScrollViewer per la lista di checkbox -->
+            <ScrollViewer MaxHeight="120" 
+                         VerticalScrollBarVisibility="Auto"
+                         Margin="0,0,0,15">
+
+                <ItemsControl Name="ThemeCheckBoxList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Name}"
+                                     Tag="{Binding Id}"
+                                     FontSize="13"
+                                     Margin="0,3"
+                                     Checked="ThemeCheckBox_Changed"
+                                     Unchecked="ThemeCheckBox_Changed"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            
+            </ScrollViewer>
+
+            <Grid>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Content="🔍Applica Filtri"
+                       Height="38"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Background="#2196F3"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       Click="ApplyFilters_Click"/>
+
+                <Button Grid.Column="2"
+                       Content="🔄 Reset"
+                       Height="38"
+                       FontSize="13"
+                       Background="#9E9E9E"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       Click="ResetFilters_Click"/>
+
+            </Grid>
+            
+        </StackPanel>
+
+    </Border>
+</UserControl>

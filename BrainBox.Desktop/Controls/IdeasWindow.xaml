@@ -3,206 +3,182 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:BrainBox.Desktop.Controls"
         Title="Gestione Idee - BrainBox" 
-        Height="700" 
-        Width="1000"
+        Height="900" 
+        Width="1400"
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5">
 
-    <Grid Margin="15">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <!-- Lista idee -->
-            <ColumnDefinition Width="15"/>
-            <!-- Spazio -->
-            <ColumnDefinition Width="*"/>
-            <!-- Form/Dettaglio -->
-        </Grid.ColumnDefinitions>
+    <DockPanel Margin="20">
 
-        <!-- ═══════════════════════════════════════ -->
-        <!-- COLONNA SINISTRA: Lista Idee -->
-        <!-- ═══════════════════════════════════════ -->
-        <Border Grid.Column="0" 
-                Background="White" 
-                BorderBrush="#DDDDDD" 
-                BorderThickness="1" 
-                CornerRadius="8"
-                Padding="15">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <!-- Filtri in alto (DockPanel.Dock="Top") -->
+        <controls:IdeaFilters DockPanel.Dock="Top"
+                              x:Name="FiltersControl" 
+                              Margin="0,0,0,20"/>
 
-                <TextBlock Grid.Row="0" 
-                          Text="📋 Le Mie Idee" 
-                          FontSize="20" 
-                          FontWeight="Bold"
-                          Foreground="#333333"
-                          Margin="0,0,0,15"/>
+        <!-- Grid principale prende tutto il resto -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <ListBox Grid.Row="1" 
-                         Name="IdeasListBox" 
-                         BorderThickness="1"
-                         BorderBrush="#DDDDDD"
-                         Padding="8"
-                         FontSize="14"
-                         Margin="0,0,0,10"
-                         SelectionChanged="IdeasListBox_SelectionChanged">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="10"/>
-                            <Setter Property="Margin" Value="0,2"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
-
-                <Button Grid.Row="2" 
-                        Content="🔄 Ricarica Lista"
-                        Height="38"
-                        Background="#E0E0E0"
-                        BorderThickness="0"
-                        FontSize="13"
-                        Cursor="Hand"
-                        Click="Refresh_Click"/>
-            </Grid>
-        </Border>
-
-        <!-- ═══════════════════════════════════════ -->
-        <!-- COLONNA DESTRA: Form Crea Idea -->
-        <!-- ═══════════════════════════════════════ -->
-        <Border Grid.Column="2" 
-                Background="White" 
-                BorderBrush="#DDDDDD" 
-                BorderThickness="1" 
-                CornerRadius="8"
-                Padding="20">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Titolo -->
-                <TextBlock Grid.Row="0" 
-                          Text="✨ Crea Nuova Idea" 
-                          FontSize="20" 
-                          FontWeight="Bold"
-                          Foreground="#333333"
-                          Margin="0,0,0,25"/>
-
-                <!-- Form Titolo -->
-                <StackPanel Grid.Row="1">
-                    <TextBlock Text="Titolo dell'idea" 
-                              FontWeight="SemiBold" 
-                              FontSize="13"
-                              Foreground="#555555"
-                              Margin="0,0,0,6"/>
-                    <TextBox Name="TitleTextBox" 
-                             Height="40"
-                             Padding="10"
-                             FontSize="14"
-                             BorderBrush="#CCCCCC"
-                             BorderThickness="1"
-                             Margin="0,0,0,20"/>
-
-                    <TextBlock Text="Descrizione dettagliata" 
-                              FontWeight="SemiBold" 
-                              FontSize="13"
-                              Foreground="#555555"
-                              Margin="0,0,0,6"/>
-                </StackPanel>
-
-                <!-- ═══════════════════════════════════════ -->
-                <!-- MODIFICA APPLICATA QUI SOTTO -->
-                <!-- ═══════════════════════════════════════ -->
-                <Grid Grid.Row="2">
+            <!-- LISTA IDEE -->
+            <Border Grid.Column="0" 
+                    Background="White" 
+                    BorderBrush="#DDDDDD" 
+                    BorderThickness="1" 
+                    CornerRadius="8"
+                    Padding="15">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <!-- Descrizione: prende tutto lo spazio RIMANENTE -->
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-
-                        <!-- Temi: prende lo spazio NECESSARIO (Auto) -->
-                        <!-- Questo impedisce che la lista checkbox venga tagliata -->
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- TextBox Descrizione (PRIMA RIGA) -->
-                    <TextBox Grid.Row="0"
-                     Name="DescriptionTextBox"
-                     Padding="10"
-                     FontSize="14"
-                     BorderBrush="#CCCCCC"
-                     BorderThickness="1"
-                     Margin="0,0,0,15"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"/>
+                    <TextBlock Grid.Row="0" 
+                              Text="📋 Le Mie Idee" 
+                              FontSize="22" 
+                              FontWeight="Bold"
+                              Foreground="#333333"
+                              Margin="0,0,0,15"/>
 
-                    <!-- Componente Temi (SECONDA RIGA) -->
-                    <!-- Nota: x:Name deve corrispondere a quello usato nel file .cs -->
-                    <controls:ThemeSelector Grid.Row="1"
-                                            x:Name="ThemeSelectorControl"
-                                            Margin="0,0,0,10"/>
-                </Grid>
+                    <ListBox Grid.Row="1" 
+                             Name="IdeasListBox" 
+                             BorderThickness="1"
+                             BorderBrush="#DDDDDD"
+                             Padding="10"
+                             FontSize="15"
+                             Margin="0,0,0,15"
+                             SelectionChanged="IdeasListBox_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
 
-
-                <!-- Bottoni -->
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    <!-- Bottone Elimina -->
-                    <Button Content="🗑️ Elimina Idea"
-                            Click="DeleteIdea_Click"
-                            Width="140"
-                            Height="42"
-                            FontSize="13"
-                            Background="#F44336"
-                            Foreground="White"
+                    <Button Grid.Row="2" 
+                            Content="🔄 Ricarica Lista"
+                            Height="45"
+                            Background="#E0E0E0"
                             BorderThickness="0"
-                            Margin="0,0,10,0"
-                            Cursor="Hand"/>
-
-                    <!-- Bottone Aggiorna -->
-                    <Button Name="UpdateIdeaButton"
-                            Content="💾 Aggiorna"
-                            Click="UpdateIdea_Click"
-                            Width="110"
-                            Height="42"
-                            FontSize="13"
-                            Background="#FF9800"
-                            Foreground="White"
-                            BorderThickness="0"
-                            Margin="0,0,10,0"
-                            Cursor="Hand"
-                            IsEnabled="False"/>
-
-                    <!-- Bottone Torna Home -->
-                    <Button Content="← Torna alla Home"
-                            Click="BackToHome_Click"
-                            Width="140"
-                            Height="42"
-                            FontSize="13"
-                            Background="#9E9E9E"
-                            Foreground="White"
-                            BorderThickness="0"
-                            Margin="0,0,10,0"
-                            Cursor="Hand"/>
-
-                    <!-- Bottone Crea -->
-                    <Button Content="➕ Crea Idea"
-                            Click="CreateIdea_Click"
-                            Width="140"
-                            Height="42"
                             FontSize="14"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Background="#4CAF50"
-                            BorderThickness="0"
-                            Cursor="Hand"/>
-                </StackPanel>
+                            Cursor="Hand"
+                            Click="Refresh_Click"/>
+                </Grid>
+            </Border>
 
-            </Grid>
-        </Border>
-    </Grid>
+            <!-- FORM CON SCROLL -->
+            <Border Grid.Column="2" 
+                    Background="White" 
+                    BorderBrush="#DDDDDD" 
+                    BorderThickness="1" 
+                    CornerRadius="8">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                              Padding="25">
+                    <StackPanel>
+
+                        <TextBlock Text="✨ Crea Nuova Idea" 
+                                  FontSize="24" 
+                                  FontWeight="Bold"
+                                  Foreground="#333333"
+                                  Margin="0,0,0,25"/>
+
+                        <!-- Titolo Idea -->
+                        <TextBlock Text="Titolo dell'idea" 
+                                  FontWeight="SemiBold" 
+                                  FontSize="14"
+                                  Foreground="#555555"
+                                  Margin="0,0,0,8"/>
+                        <TextBox Name="TitleTextBox" 
+                                 Height="45"
+                                 Padding="10"
+                                 FontSize="16"
+                                 BorderBrush="#CCCCCC"
+                                 BorderThickness="1"
+                                 Margin="0,0,0,20"/>
+
+                        <!-- Descrizione -->
+                        <TextBlock Text="Descrizione dettagliata" 
+                                  FontWeight="SemiBold" 
+                                  FontSize="14"
+                                  Foreground="#555555"
+                                  Margin="0,0,0,8"/>
+                        <TextBox Name="DescriptionTextBox"
+                                 Padding="12"
+                                 FontSize="15"
+                                 BorderBrush="#CCCCCC"
+                                 BorderThickness="1"
+                                 Height="200"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Visible"
+                                 Margin="0,0,0,20"/>
+
+                        <!-- Temi -->
+                        <controls:ThemeSelector x:Name="ThemeSelectorControl"
+                                                Margin="0,0,0,25"/>
+
+                        <!-- Pulsanti -->
+                        <StackPanel Orientation="Horizontal" 
+                                   HorizontalAlignment="Right"
+                                   Margin="0,10,0,0">
+
+                            <Button Content="🗑️ Elimina"
+                                    Click="DeleteIdea_Click"
+                                    Width="120"
+                                    Height="45"
+                                    FontSize="14"
+                                    Background="#FFCDD2"
+                                    Foreground="#D32F2F"
+                                    BorderThickness="0"
+                                    Margin="0,0,15,0"
+                                    Cursor="Hand"/>
+
+                            <Button Name="UpdateIdeaButton"
+                                    Content="💾 Aggiorna"
+                                    Click="UpdateIdea_Click"
+                                    Width="120"
+                                    Height="45"
+                                    FontSize="14"
+                                    Background="#FFB74D"
+                                    Foreground="#E65100"
+                                    BorderThickness="0"
+                                    Margin="0,0,15,0"
+                                    Cursor="Hand"
+                                    IsEnabled="False"/>
+
+                            <Button Content="← Home"
+                                    Click="BackToHome_Click"
+                                    Width="120"
+                                    Height="45"
+                                    FontSize="14"
+                                    Background="#E0E0E0"
+                                    Foreground="#616161"
+                                    BorderThickness="0"
+                                    Margin="0,0,15,0"
+                                    Cursor="Hand"/>
+
+                            <Button Content="➕ Crea Idea"
+                                    Click="CreateIdea_Click"
+                                    Width="150"
+                                    Height="45"
+                                    FontSize="15"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Background="#4CAF50"
+                                    BorderThickness="0"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+    </DockPanel>
 </Window>

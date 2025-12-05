@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using BrainBox.Desktop.Models;
+using BrainBox.Desktop.Model;
 
 namespace BrainBox.Desktop.Services
 {
@@ -20,24 +20,49 @@ namespace BrainBox.Desktop.Services
             };
         }
 
-        // ════════════════════════════════════════
-        // METODI PER LE IDEE
-        // ════════════════════════════════════════
+
 
         /// <summary>
         /// GET /api/ideas - Ottiene tutte le idee
         /// </summary>
-        public async Task<List<IdeaDto>> GetIdeasAsync()
+        public async Task<List<IdeaDto>> GetIdeasAsync(
+            DateTime? createdFrom = null,
+            DateTime? createdTo = null,
+            DateTime? modifiedFrom = null,
+            DateTime? modifiedTo = null,
+            List<int>? themeIds = null)
         {
-            try
+           
+            var queryParams = new List<string>();
+
+            // Filtro data creazione
+            if (createdFrom.HasValue)
+                queryParams.Add($"createdFrom={createdFrom.Value:yyyy-MM-dd}");
+
+            if (createdTo.HasValue)
+                queryParams.Add($"createdTo={createdTo.Value:yyyy-MM-dd}");
+
+            // Filtro data modifica
+            if (modifiedFrom.HasValue)
+                queryParams.Add($"modifiedFrom={modifiedFrom.Value:yyyy-MM-dd}");
+
+            if (modifiedTo.HasValue)
+                queryParams.Add($"modifiedTo={modifiedTo.Value:yyyy-MM-dd}");
+
+            // Filtro temi
+            if (themeIds != null && themeIds.Any())
             {
-                var ideas = await _httpClient.GetFromJsonAsync<List<IdeaDto>>("/api/ideas");
-                return ideas ?? [];
+                var themeIdsString = string.Join(",", themeIds);
+                queryParams.Add($"themeIds={themeIdsString}");
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Errore durante il caricamento delle idee: {ex.Message}");
-            }
+
+           
+            var query = queryParams.Any() ? "?" + string.Join("&", queryParams) : "";
+            var url = $"/api/Ideas{query}";
+
+         
+            return await _httpClient.GetFromJsonAsync<List<IdeaDto>>(url)
+                   ?? new List<IdeaDto>();
         }
 
         /// <summary>
