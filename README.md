@@ -2,18 +2,16 @@
 
 **BrainBox** è un'applicazione di gestione idee composta da un backend API REST e un frontend desktop WPF. Permette di organizzare idee creative associandole a temi/categorie personalizzabili.
 
-## 📋 Prerequisiti
+## Prerequisiti
 
 Prima di iniziare, assicurati di avere installato:
 
-- **Visual Studio 2022** (Community o superiore)
-  - Workload: "ASP.NET e sviluppo web"
-  - Workload: ".NET Desktop Development"
-- **.NET 8.0 SDK**
-- **SQL Server Express** (o versione completa)
-- **Git**
+- Visual Studio 2022 (Community o superiore)
+- .NET 8.0 SDK
+- SQL Server Express (o versione completa)
+- Git
 
-## 🚀 Installazione
+## Installazione
 
 ### 1. Clone del Repository
 
@@ -24,7 +22,7 @@ cd BrainBox
 
 ### 2. Configurazione Database
 
-Il progetto usa SQL Server con Entity Framework Core. Il connection string di default è configurato per SQL Server Express:
+Modifica il connection string in `BrainBox/appsettings.json` se usi un'istanza di SQL Server diversa da Express:
 
 ```json
 "ConnectionStrings": {
@@ -32,184 +30,108 @@ Il progetto usa SQL Server con Entity Framework Core. Il connection string di de
 }
 ```
 
-**Se usi un'istanza diversa di SQL Server**, modifica il connection string in `BrainBox/appsettings.json`.
-
 ### 3. Creazione Database
 
-Apri la **Package Manager Console** in Visual Studio e esegui:
+Apri Package Manager Console in Visual Studio e esegui:
 
 ```powershell
 Update-Database
 ```
 
-Questo comando applica le migrations e crea il database `BrainBoxDb` con tutte le tabelle necessarie.
+### 4. Importazione Dump Dati
 
-### 4. Configurazione Startup Projects
+Se desideri importare i dati di esempio:
 
-1. In Visual Studio, click destro sulla **Solution** nel Solution Explorer
+1. Apri SQL Server Management Studio
+2. Connettiti al server SQL Server
+3. Fai clic destro su **BrainBoxDb** > **Tasks** > **Restore**
+4. Importa il file dump fornito
+
+**Attenzione**: Se esegui `Update-Database` dopo aver importato un dump, potrebbe verificarsi un conflitto se il dump contiene versioni diverse delle migrations. In tal caso:
+- Esegui prima il dump
+- Poi sincronizza le migrations eseguendo `Update-Database`
+
+### 5. Configurazione Startup Projects
+
+1. Click destro sulla **Solution** nel Solution Explorer
 2. Seleziona **Set Startup Projects...**
 3. Scegli **Multiple startup projects**
 4. Imposta sia `BrainBox` che `BrainBox.Desktop` su **Start**
 
-### 5. Avvio Applicazione
+### 6. Avvio Applicazione
 
-Premi **F5** per avviare entrambi i progetti contemporaneamente.
+Premi **F5** per avviare entrambi i progetti.
 
-## 🏗️ Architettura
+## Architettura
 
 ### Backend: BrainBox (Web API)
 
-Web API REST costruita con **ASP.NET Core 8.0** che espone endpoint per la gestione di idee e temi.
+Web API REST costruita con ASP.NET Core 8.0.
 
-#### Endpoint Principali
+**Endpoint Principali**
 
-**Ideas Controller** (`/api/Ideas`)
 - `GET /api/Ideas` - Lista tutte le idee
 - `GET /api/Ideas/{id}` - Dettaglio idea specifica
 - `POST /api/Ideas` - Crea nuova idea
-- `PUT /api/Ideas/{id}` - Aggiorna idea esistente
+- `PUT /api/Ideas/{id}` - Aggiorna idea
 - `DELETE /api/Ideas/{id}` - Elimina idea
-
-**Themes Controller** (`/api/Themes`)
 - `GET /api/Themes` - Lista tutti i temi
 - `POST /api/Themes` - Crea nuovo tema
 - `DELETE /api/Themes/{id}` - Elimina tema
 
-#### Modello Dati
+**Modello Dati**
 
-**Idea**
-- `Id` (int) - Identificativo univoco
-- `Title` (string, max 200 caratteri) - Titolo dell'idea
-- `Description` (string) - Descrizione dettagliata
-- `CreatedAt` (DateTime) - Data creazione
-- `LastModifiedAt` (DateTime) - Data ultima modifica
-- `IdeaThemes` (ICollection) - Relazione many-to-many con i temi
-
-**Theme**
-- `Id` (int) - Identificativo univoco
-- `Name` (string, max 100 caratteri) - Nome del tema
-- `IdeaThemes` (ICollection) - Relazione many-to-many con le idee
-
-**IdeaTheme**
-- Tabella di join per relazione many-to-many tra Idea e Theme
-
-#### Tecnologie Backend
-
-- **ASP.NET Core 8.0** - Framework web
-- **Entity Framework Core 8.0** - ORM per SQL Server
-- **SQL Server** - Database relazionale
-- **Swagger/OpenAPI** - Documentazione API interattiva (disponibile in development mode)
+- **Idea**: Id, Title, Description, CreatedAt, LastModifiedAt, IdeaThemes
+- **Theme**: Id, Name, IdeaThemes
+- **IdeaTheme**: Tabella di join per relazione many-to-many
 
 ### Frontend: BrainBox.Desktop (WPF)
 
-Applicazione desktop **Windows Presentation Foundation (WPF)** che consuma le API del backend.
+Applicazione desktop Windows Presentation Foundation.
 
-#### Struttura Progetto
+**Funzionalità**
 
-```
-BrainBox.Desktop/
-├── Controls/          # Controlli personalizzati riutilizzabili
-├── Model/             # Modelli dati (DTOs)
-├── Services/          # Servizi per comunicazione HTTP con API
-├── MainWindow.xaml    # Finestra principale con menu navigazione
-├── IdeasWindow.xaml   # Gestione idee (CRUD)
-└── ThemesWindow.xaml  # Gestione temi (CRUD)
-```
+- MainWindow: Schermata principale con pulsanti di navigazione
+- IdeasWindow: CRUD completo per idee con associazione a temi
+- ThemesWindow: Gestione categorie/temi
 
-#### Funzionalità Frontend
+## Dipendenze
 
-- **MainWindow**: Schermata principale con pulsanti di navigazione
-  - "Gestisci Idee" → Apre IdeasWindow
-  - "Gestisci Temi" → Apre ThemesWindow
+**Backend**
+- Microsoft.EntityFrameworkCore.SqlServer (8.0.22)
+- Microsoft.EntityFrameworkCore.Tools (8.0.22)
+- Swashbuckle.AspNetCore (6.6.2)
 
-- **IdeasWindow**: Interfaccia completa per gestire idee
-  - Creazione nuove idee con titolo e descrizione
-  - Modifica idee esistenti
-  - Eliminazione idee
-  - Associazione idee a temi multipli
-  - Visualizzazione date creazione/modifica
+**Frontend**
+- WPF (.NET 8.0)
 
-- **ThemesWindow**: Gestione categorie/temi
-  - Creazione nuovi temi
-  - Visualizzazione lista temi esistenti
-  - Eliminazione temi
-
-## 🔄 Flusso di Funzionamento
-
-1. Il **backend API** si avvia ed espone endpoint REST (es. `https://localhost:7000`)
-2. L'**app WPF** si connette all'API tramite `HttpClient` nei Services
-3. L'utente interagisce con l'**interfaccia grafica WPF**
-4. Le operazioni CRUD vengono inviate come richieste HTTP all'**API**
-5. L'API processa le richieste, interagisce con **SQL Server** tramite EF Core
-6. I dati aggiornati ritornano al **client WPF** che aggiorna la UI
-
-```
-┌─────────────────┐         HTTP REST API        ┌──────────────┐
-│  BrainBox.      │  ◄─────────────────────────► │   BrainBox   │
-│  Desktop (WPF)  │      (JSON DTOs)              │   Web API    │
-└─────────────────┘                               └──────┬───────┘
-                                                         │
-                                                         │ EF Core
-                                                         ▼
-                                                  ┌──────────────┐
-                                                  │  SQL Server  │
-                                                  │  BrainBoxDb  │
-                                                  └──────────────┘
-```
-
-## 🧪 Testing API
-
-Durante lo sviluppo, puoi testare le API usando:
-
-1. **Swagger UI** - Naviga a `https://localhost:[porta]/swagger` quando l'API è in esecuzione
-2. **Postman** - Importa gli endpoint dalla documentazione Swagger
-3. **File .http** - Usa `BrainBox/BrainBox.http` con Visual Studio
-
-## 📦 Dipendenze NuGet
-
-### Backend (BrainBox)
-- `Microsoft.EntityFrameworkCore.SqlServer` (8.0.22)
-- `Microsoft.EntityFrameworkCore.Tools` (8.0.22)
-- `Swashbuckle.AspNetCore` (6.6.2)
-- `Microsoft.VisualStudio.Web.CodeGeneration.Design` (8.0.7)
-
-### Frontend (BrainBox.Desktop)
-- Framework: **WPF (.NET 8.0)**
-
-## 🛠️ Comandi Utili
-
-### Entity Framework Migrations
+## Comandi Utili
 
 ```powershell
 # Creare una nuova migration
 Add-Migration NomeMigration
 
-# Applicare migrations al database
+# Applicare migrations
 Update-Database
 
 # Rimuovere ultima migration non applicata
 Remove-Migration
 ```
 
-## 📝 Note Tecniche
+## Testing API
 
-- **Pattern Architetturale**: Client-Server con separazione netta tra backend e frontend
-- **Data Transfer**: DTOs per disaccoppiare entità database da oggetti API
-- **Database**: Code-First approach con EF Core Migrations
-- **UI Pattern**: XAML/Code-behind nel frontend WPF
-- **API Design**: RESTful con convenzioni standard HTTP
+Durante lo sviluppo puoi testare le API usando:
 
-## 🔗 Link Utili
+1. **Swagger UI** - Naviga a `https://localhost:[porta]/swagger` quando l'API è in esecuzione
+2. **Postman** - Importa gli endpoint dalla documentazione Swagger
+3. **File .http** - Usa `BrainBox/BrainBox.http` con Visual Studio
 
-- Repository GitHub: [https://github.com/alessandro-sartini/BrainBox](https://github.com/alessandro-sartini/BrainBox)
-- Documentazione .NET 8.0: [https://learn.microsoft.com/dotnet/](https://learn.microsoft.com/dotnet/)
-- Entity Framework Core: [https://learn.microsoft.com/ef/core/](https://learn.microsoft.com/ef/core/)
+## Link Utili
 
-## 👤 Autore
+- Repository GitHub: https://github.com/alessandro-sartini/BrainBox
+- Documentazione .NET 8.0: https://learn.microsoft.com/dotnet/
+- Entity Framework Core: https://learn.microsoft.com/ef/core/
 
-**Alessandro Sartini**
-- GitHub: [@alessandro-sartini](https://github.com/alessandro-sartini)
+## Autore
 
----
-
-**BrainBox** - Organizza le tue idee creative 💡
+**Alessandro Sartini** - [@alessandro-sartini](https://github.com/alessandro-sartini)
