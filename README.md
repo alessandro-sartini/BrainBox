@@ -29,16 +29,7 @@ Modifica il connection string in `BrainBox/appsettings.json` se usi un'istanza d
   "DefaultConnection": "Data Source=.\\sqlexpress;Initial Catalog=BrainBoxDb;Integrated Security=True;TrustServerCertificate=True;"
 }
 ```
-
-### 3. Creazione Database
-
-Apri Package Manager Console in Visual Studio e esegui:
-
-```powershell
-Update-Database
-```
-
-### 4. Importazione Dump Dati
+### 3. Importazione Dump Dati(Se occorre avere dati test)
 
 Se desideri importare i dati di esempio:
 
@@ -47,20 +38,18 @@ Se desideri importare i dati di esempio:
 3. Fai clic destro su **BrainBoxDb** > **Tasks** > **Restore**
 4. Importa il file dump fornito
 
-**Attenzione**: Se esegui `Update-Database` dopo aver importato un dump, potrebbe verificarsi un conflitto se il dump contiene versioni diverse delle migrations. In tal caso:
+**Attenzione**: :
 - Esegui prima il dump
 - Poi sincronizza le migrations eseguendo `Update-Database`
+  
+### 4. Creazione Database
 
-### 5. Configurazione Startup Projects
+Apri Package Manager Console in Visual Studio e esegui:
 
-1. Click destro sulla **Solution** nel Solution Explorer
-2. Seleziona **Set Startup Projects...**
-3. Scegli **Multiple startup projects**
-4. Imposta sia `BrainBox` che `BrainBox.Desktop` su **Start**
+```
+Update-Database
+```
 
-### 6. Avvio Applicazione
-
-Premi **F5** per avviare entrambi i progetti.
 
 ## Architettura
 
@@ -92,8 +81,8 @@ Applicazione desktop Windows Presentation Foundation.
 **Funzionalità**
 
 - MainWindow: Schermata principale con pulsanti di navigazione
-- IdeasWindow: CRUD completo per idee con associazione a temi
-- ThemesWindow: Gestione categorie/temi
+- IdeasWindow: CRUD completo per idee con associazione a temi, filtri di ricerca
+- ThemesWindow: CRUD completo gestione categorie/temi
 
 ## Dipendenze
 
@@ -105,32 +94,18 @@ Applicazione desktop Windows Presentation Foundation.
 **Frontend**
 - WPF (.NET 8.0)
 
-## Comandi Utili
-
-```powershell
-# Creare una nuova migration
-Add-Migration NomeMigration
-
-# Applicare migrations
-Update-Database
-
-# Rimuovere ultima migration non applicata
-Remove-Migration
-```
-
 ## Testing API
 
 Durante lo sviluppo puoi testare le API usando:
 
 1. **Swagger UI** - Naviga a `https://localhost:[porta]/swagger` quando l'API è in esecuzione
 2. **Postman** - Importa gli endpoint dalla documentazione Swagger
-3. **File .http** - Usa `BrainBox/BrainBox.http` con Visual Studio
+
 
 ## Link Utili
 
 - Repository GitHub: https://github.com/alessandro-sartini/BrainBox
-- Documentazione .NET 8.0: https://learn.microsoft.com/dotnet/
-- Entity Framework Core: https://learn.microsoft.com/ef/core/
+
 
 ## Autore
 
