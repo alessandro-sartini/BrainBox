@@ -6,9 +6,9 @@
 
 Prima di iniziare, assicurati di avere installato:
 
-- Visual Studio 2022 (Community o superiore)
+- Visual Studio 2022 
 - .NET 8.0 SDK
-- SQL Server Express (o versione completa)
+- SQL Server Express 
 - Git
 
 ## Installazione
