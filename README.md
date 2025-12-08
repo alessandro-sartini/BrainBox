@@ -89,7 +89,7 @@ Applicazione desktop Windows Presentation Foundation.
 **Backend**
 - Microsoft.EntityFrameworkCore.SqlServer (8.0.22)
 - Microsoft.EntityFrameworkCore.Tools (8.0.22)
-- Swashbuckle.AspNetCore (6.6.2)
+
 
 **Frontend**
 - WPF (.NET 8.0)
